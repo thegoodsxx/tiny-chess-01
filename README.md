@@ -14,3 +14,13 @@ The engine executes from a compressed single-file payload implementing competiti
 - **Piece-Square Tables**: Material values paired with piece-square tables that taper positional evaluations from middlegame to endgame.
 - **Iterative Deepening**: Iterative depth progression prioritizing strong moves from transposition tables, MVV-LVA, and killer moves.
 - **Fixed-Node Deterministic Search**: Search terminates on a strict node budget (40,000 nodes) rather than a clock, ensuring reproducible move decisions across replay trials.
+
+## Source and Packing
+
+The readable engine source is maintained in `engine.py` within this directory. The committed `main.py` is generated using the make.fun kit's compressor:
+
+```bash
+node cli/makefun.mjs compress engine.py --out main.py
+```
+
+The packed file round-trips byte-identical to `engine.py` upon decompression, leaving the engine implementation completely unchanged.
