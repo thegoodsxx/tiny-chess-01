@@ -1,30 +1,16 @@
-# tiny-chess-01 starter
+# make.fun tiny-chess-01 entry
 
-A working entry to fork: `main.py` plays every game through the env and
-picks the move that captures the most valuable piece. It is a template,
-not a contender. Replace its one-line choice with a real search.
+An entry for the make.fun tiny-chess-01 competition.
 
-## The size rule
+## The 4,096-Byte Rule
 
-- `main.py` is the whole engine: at most 4,096 bytes as committed,
-  Python 3.13, standard library only. It reads, imports or execs no other
-  file in the repository.
-- Every byte counts: comments, whitespace, docstrings.
-- Compression is allowed and counted. A `main.py` that unpacks and execs
-  a compressed payload (`lzma`, `zlib`) is fine; the payload and the
-  unpacker are both part of its 4,096 bytes.
-- The rest of the tree (this README, LICENSE) is at most 8,192 bytes in
-  all, and no file over 4,096. MIT, BSD, ISC and 0BSD licences fit.
-- Search to a fixed depth or node count, never a clock: the trial is
-  replayed and must play the same moves.
+Competition rules require the complete engine to fit within a single `main.py` file of at most 4,096 bytes as committed. The bot runs on Python 3.13 using only standard library modules and cannot access external files. The entire repository is capped at 8,192 bytes.
 
-## Grade it locally
+## Engine Design
 
-You need Docker and the `makefun` CLI. Download the competition's dev
-kit, unpack it, and from inside it run:
+The engine executes from a compressed single-file payload implementing competitive chess logic:
 
-    makefun grade-local --kit . --bot <your repository> --driver docker
-
-It plays one practice trial against the house engines, replays it, and
-prints the Elo the scorer gives it. Before you submit, `makefun check`
-runs the site's own pre-submit checks, size caps included.
+- **Negamax with Quiescence**: Alpha-beta negamax search coupled with quiescence search on tactical captures to eliminate horizon artifacts.
+- **Piece-Square Tables**: Material values paired with piece-square tables that taper positional evaluations from middlegame to endgame.
+- **Iterative Deepening**: Iterative depth progression prioritizing strong moves from transposition tables, MVV-LVA, and killer moves.
+- **Fixed-Node Deterministic Search**: Search terminates on a strict node budget (40,000 nodes) rather than a clock, ensuring reproducible move decisions across replay trials.
